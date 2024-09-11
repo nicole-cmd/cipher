@@ -8,4 +8,4 @@ A project for CSC-207 2024Fa.
 
 ACKNOWLEDGEMENTS
 
-This code may be found at <https://github.com/nicole-cmd/lab-intro-classes-maven.git>.
+This code may be found at <https://github.com/nicole-cmd/cipher.git>.
