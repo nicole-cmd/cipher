@@ -7,6 +7,7 @@ A project for CSC-207 2024Fa.
 [brief project description]
 
 ACKNOWLEDGEMENTS
+
 ~ https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html#valueOf(char) 
 Consulted String library to find appropriate String methods to utilize in different functions.
 
@@ -36,5 +37,8 @@ Mini Project instructions guided function behaviors and facilitated other refere
 
 ~ https://rebelsky.cs.grinnell.edu/Courses/CSC207/2024Fa/labs/unit-testing.html
 Referenced guidance on running and debugging unit tests.
+
+~ Joshua Delarosa and Alma Ordaz
+Helped me figure out how to run parts of my program when the edu.grinnell.csc207 package could not be found.
 
 This code may be found at <https://github.com/nicole-cmd/cipher.git>.
