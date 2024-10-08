@@ -5,7 +5,7 @@ import java.lang.String;
 import java.lang.Character;
 import java.lang.System;
 
-import edu.grinnell.csc207.main.CipherUtils;
+import edu.grinnell.csc207.util.CipherUtils;
 
 @SuppressWarnings("unused")
 public class AllCaesar {
