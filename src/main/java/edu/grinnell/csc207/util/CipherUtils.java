@@ -8,39 +8,39 @@ import java.lang.String;
  * @author Nicole Gorrell
  */
 public class CipherUtils {
-  // +------------------+----------------------------------------------
-  // | Global Variables |
-  // +------------------+
+  // +-----------+----------------------------------------------
+  // | Constants |
+  // +-----------+
 
   /**
    * Establishing base value (97) to convert between integers and letter values.
    */
-  private static int base = (int) 'a';
+  private static final int base = (int) 'a';
 
   /**
    * Setting the maximum number of (lowercase) letters we can de-/encrypt.
    */
-  public static int max = 26;
+  public static final int max = 26;
 
   /**
    * String to reference the input "-encode" action in Cipher.java.
    */
-  public static String actionEn = "-encode";
+  public static final String actionEn = "-encode";
 
   /**
    * String to reference the input "-decode" action in Cipher.java.
    */
-  public static String actionDe = "-decode";
+  public static final String actionDe = "-decode";
 
   /**
    * String to reference the input "-vigenere" cipher in Cipher.java.
    */
-  public static String vigCall = "-vigenere";
+  public static final String vigCall = "-vigenere";
 
   /**
    * String to reference the input "-caesar" cipher in Cipher.java.
    */
-  public static String caesarCall = "-caesar";  
+  public static final String caesarCall = "-caesar";
 
   // +----------------+--------------------------------------------------------
   // | Helper Methods |
@@ -55,7 +55,7 @@ public class CipherUtils {
    * @return int
    *    The letter in its numerical form.
    */
-  private static int letter2int(char letter) {
+  public static int letter2int(char letter) {
     return (int) letter - base;
   } // letter2int(char)
 
@@ -63,7 +63,7 @@ public class CipherUtils {
    * Convert the number into its corresponding letter, within the
    * specified character range of 'a-z'.
    * 
-   * @param int i 
+   * @param int i
    *    The numerical value we want to convert into a character.
    * @return char
    *    The number in its letter form.
@@ -71,6 +71,26 @@ public class CipherUtils {
   private static char int2letter(int i) {
     return (char) (i + base);
   } // int2letter(int)
+
+  /**
+   * Modified modulo that wraps negative numerators around to the
+   * beginning of the alphabet.
+   * 
+   * @param int num
+   *    The numerical value we want to convert into a character. The result of 
+   * @return char
+   *    The number in its letter form.
+   */
+  private static int mod(int num) {
+    int result = num % max;
+
+    if (result < 0) {
+      result += max;
+      return result;
+    } // if
+
+    return result;
+  } // mod(int, int)
 
   // +-----------------+--------------------------------------------------------
   // | Primary Methods |
@@ -89,21 +109,15 @@ public class CipherUtils {
    *    The string message encrypted via the Caesar method.
    */
   public static String caesarEncrypt(String str, char letter) {
-
     char[] msgArray = str.toCharArray();
     char[] msgFin = new char[msgArray.length];
     int n = letter2int(letter);
 
-    for (char index : msgArray) {
-      int ch = letter2int(msgArray[index]);
-      int encode = (ch + n) % max;
+    for(int i = 0; i < msgArray.length; i++) {
+      int ch = letter2int(msgArray[i]);
+      int encode = mod((ch + n));
 
-      if (encode < 0) {
-        int fin = encode + max;
-        msgFin[index] = int2letter(fin);
-      } else {
-        msgFin[index] = int2letter(encode);
-      } // if...else
+      msgFin[i] = int2letter(encode);
     } // for
 
     return new String(msgFin);
@@ -116,7 +130,7 @@ public class CipherUtils {
    * 
    * @param String str
    *    The encrypted message we want to decrypt.
-   * @param char letter
+   * @param char   letter
    *    The key that will decrypt the input message.
    * @return String
    *    The string message decrypted via the Caesar method.
@@ -126,16 +140,11 @@ public class CipherUtils {
     char[] msgPlain = new char[hiddenArray.length];
     int n = letter2int(letter);
 
-    for (char index : hiddenArray) {
-      int ch = letter2int(hiddenArray[index]);
-      int decode = (ch - n) % max;
+    for (int i = 0; i < hiddenArray.length; i++) {
+      int ch = letter2int(hiddenArray[i]);
+      int decode = mod((ch - n));
 
-      if (decode < 0) {
-        int fin = decode + max;
-        msgPlain[index] = int2letter(fin);
-      } else {
-        msgPlain[index] = int2letter(decode);
-      } // if...else
+      msgPlain[i] = int2letter(decode);
     } // for
 
     return new String(msgPlain);
@@ -146,41 +155,33 @@ public class CipherUtils {
    * key. Message and key both must consist of all lowercase English letters.
    * 
    * @param String str
-   *    The message we want to encrypt.
+   *               The message we want to encrypt.
    * @param String key
-   *    The key that will determine the resulting encryption.
+   *               The key that will determine the resulting encryption.
    * @return String
-   *    The string message encrypted via the Vigenere method.
+   *         The string message encrypted via the Vigenere method.
    */
   public static String vigenereEncrypt(String str, String key) {
     char[] msgArray = str.toCharArray();
     char[] keyArray = key.toCharArray();
     char[] msgFin = new char[msgArray.length];
+    int i = 0;
 
-    for (char index : msgArray) {
-      if (index == keyArray.length - 1) {
-        keyArray[index] = 0;
-      } // if
+    do {
+      for (int k = 0; k < keyArray.length; k++) {
+        if (msgArray[i] == keyArray.length) {
+          keyArray[k] = 0;
+        } // if
 
-      int ch = letter2int(msgArray[index]);
-      int n = letter2int(keyArray[index]);
-      int encode = (ch + n) % max;
+        int ch = letter2int(msgArray[i]);
+        int n = letter2int(keyArray[k]);
+        int encode = mod(ch + n);
 
-      if (encode < 0) {
-        int fin = encode + max;
-        msgFin[index] = int2letter(fin);
-      } else {
-        msgFin[index] = int2letter(encode);
-      } // if...else
-    } // for
-  
-    // if (key.length < msgArray.length) {
-    // key.concat(indexOf(key.charAt()));
-    // }
-    // if (key.length() < msgArray.length) {
-      //   String keyLong = key.repeat(Math.floorDiv(str.length(), key.length()));
-      //   char[] keyArray = keyLong.toCharArray();
-      // }
+        msgFin[i] = int2letter(encode);
+        i++;
+      } // for
+    } while(i < msgArray.length); // do/while
+
     return new String(msgFin);
   } // vigenerEncrypt(String, String)
 
@@ -189,32 +190,27 @@ public class CipherUtils {
    * key. Message and key both must consist of all lowercase English letters.
    * 
    * @param String str
-   *    The encrypted message we want to decrypt.
+   *               The encrypted message we want to decrypt.
    * @param String key
-   *    The key that will decrypt the input message.
+   *               The key that will decrypt the input message.
    * @return String
-   *    The string message decrypted via the Vigenere method.
+   *         The string message decrypted via the Vigenere method.
    */
   public static String vigenereDecrypt(String str, String key) {
     char[] hiddenArray = str.toCharArray();
     char[] keyArray = key.toCharArray();
     char[] msgPlain = new char[hiddenArray.length];
 
-    for (char index : hiddenArray) {
-      if (index == keyArray.length - 1) {
-        keyArray[index] = 0;
+    for (int i = 0; i < hiddenArray.length; i++) {
+      if (i == keyArray.length - 1) {
+        keyArray[i] = 0;
       } // if
 
-      int ch = letter2int(hiddenArray[index]);
-      int n = letter2int(keyArray[index]);
-      int decode = (ch + n) % max;
+      int ch = letter2int(hiddenArray[i]);
+      int n = letter2int(keyArray[i]);
+      int decode = mod((ch - n));
 
-      if (decode < 0) {
-        int fin = decode - max;
-        msgPlain[index] = int2letter(fin);
-      } else {
-        msgPlain[index] = int2letter(decode);
-      } // if...else
+      msgPlain[i] = int2letter(decode);
     } // for
 
     return new String(msgPlain);

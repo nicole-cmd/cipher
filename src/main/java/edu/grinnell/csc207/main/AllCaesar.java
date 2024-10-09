@@ -18,30 +18,31 @@ public class AllCaesar {
     char[] inTwo = args[1].toCharArray();
 
     // Checks for correct amount of command line inputs.  
-    if (args.length != 2) {
+    if(args.length != 2) {
       System.err.println("Error: Incorrect number of parameters.");
-      return; // End program.
+      return; // End program
     } // if 
     
     // Ensures that the first command argument is a valid input
-    if ((!(args[0].equals("encode"))) && (!(args[0].equals("decode"))) ) {
+    if((!(args[0].equals("encode"))) && (!(args[0].equals("decode"))) ) {
       System.err.println("Error: Invalid option: " + args[0] + ". Valid options are 'encode' or 'decode'.");
       return; // End program
     } // if
 
     // Ensures the input message to process is in a valid format
-    for (char index : inTwo) {
-      if (!(Character.isAlphabetic(index))) { // doesn't necessarily check for lowercase...
+    for(char index : inTwo) {
+      if((!(Character.isAlphabetic(index))) || CipherUtils.letter2int(index) < 0 || CipherUtils.letter2int(index) > CipherUtils.max - 1) {
         System.err.println("Error: String contains characters other than lowercase letters.");
         return; // End program
       } // if
     } // for
 
-    PrintWriter pen = new PrintWriter(System.out, true);
+    PrintWriter pen = new PrintWriter(System.out, true); // Preparing to print results
     String str = args[1];
-    for (char ch = 'a'; ch <= 'z'; ch++) {
+    for(char ch = 'a'; ch <= 'z'; ch++) { // Print all 26 possible Caesar encryptions
       pen.printf("n = %c: %s\n", ch, CipherUtils.caesarEncrypt(str, ch));
-    }
+    } // for 
+
     pen.flush();
     pen.close();
   } // main(String[])
